@@ -18,9 +18,10 @@ module CocoapodsRepoUpdate
         Pod::UI.puts "Not updating local specs repo"
       rescue Pod::NoSpecFoundError
         Pod::UI.puts "At least one Pod is not in the local specs repo. Updating specs repo..."
-
-        config = Pod::Config.new
-        config.sources_manager.update(nil, false) # Update all specs repos, silently
+        # Update the specs repos, silently
+        CocoapodsRepoUpdate::Helper.suppress_output do
+          analyzer.update_repositories
+        end
       end
     end
   end
