@@ -16,8 +16,15 @@ module CocoapodsRepoUpdate
           analyzer.analyze
         end
         Pod::UI.puts "Not updating local specs repo"
-      rescue Pod::NoSpecFoundError
-        Pod::UI.puts "At least one Pod is not in the local specs repo. Updating specs repo..."
+      rescue Exception => e
+        raise unless CocoapodsRepoUpdate::Helper.specs_need_update?(e)
+
+        message = "At least one Pod is not in the local specs repo"
+        if CocoapodsRepoUpdate::Helper.version_conflict?(e)
+          message = "There was a version conflict with some of your pods"
+        end
+
+        Pod::UI.puts "#{message}. Updating specs repo..."
         # Update the specs repos, silently
         CocoapodsRepoUpdate::Helper.suppress_output do
           analyzer.update_repositories

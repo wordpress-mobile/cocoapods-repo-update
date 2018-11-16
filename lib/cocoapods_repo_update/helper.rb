@@ -13,5 +13,17 @@ module CocoapodsRepoUpdate
       $stdout.reopen original_stdout
       $stderr.reopen original_stderr
     end
+
+    def self.specs_need_update?(exception)
+      no_spec_found?(exception) || version_conflict?(exception)
+    end
+
+    def self.no_spec_found?(exception)
+      exception.is_a?(Pod::NoSpecFoundError)
+    end
+
+    def self.version_conflict?(exception)
+      exception.cause.is_a?(Molinillo::VersionConflict)
+    end
   end
 end
