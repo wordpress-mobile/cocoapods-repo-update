@@ -19,9 +19,9 @@ module CocoapodsRepoUpdate
       rescue Exception => e
         raise unless CocoapodsRepoUpdate::Helper.specs_need_update?(e)
 
-        message = "There was a version conflict with some of your pods"
-        if CocoapodsRepoUpdate::Helper.no_spec_found?(e)
-          message = "At least one Pod is not in the local specs repo"
+        message = "At least one Pod is not in the local specs repo"
+        if CocoapodsRepoUpdate::Helper.version_conflict?(e)
+          message = "There was a version conflict with some of your pods"
         end
 
         Pod::UI.puts "#{message}. Updating specs repo..."
