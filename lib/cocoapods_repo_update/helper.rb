@@ -15,7 +15,7 @@ module CocoapodsRepoUpdate
     end
 
     def self.specs_need_update?(exception)
-      no_spec_found?(exception) || version_conflict?(exception)
+      no_spec_found?(exception) || version_conflict?(exception) || no_such_dependency(exception)
     end
 
     def self.no_spec_found?(exception)
@@ -24,6 +24,10 @@ module CocoapodsRepoUpdate
 
     def self.version_conflict?(exception)
       exception.cause.is_a?(Molinillo::VersionConflict)
+    end
+
+    def self.no_such_dependency(exception)
+      exception.cause.is_a?(Molinillo::NoSuchDependencyError)
     end
   end
 end
